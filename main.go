@@ -1,0 +1,51 @@
+package main
+
+import (
+	"fmt"
+	"os"
+	"time"
+
+	"github.com/tinkermode/internal/service"
+)
+
+const timeFormat = time.RFC3339
+
+func main() {
+
+	startTime, endTime := validation()
+
+	tsService := service.NewTimeSeriesService()
+	err := tsService.ProcessTimeSeries(startTime, endTime, func(t time.Time, avg float64) {
+		fmt.Printf("%s %.4f\n", t.Format(timeFormat), avg)
+	})
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error processing time series:", err)
+		os.Exit(1)
+	}
+
+}
+
+func validation() (startTime, endTime time.Time) {
+	if len(os.Args) != 3 {
+		fmt.Fprintln(os.Stderr, "Usage: program <start-time> <end-time>")
+		os.Exit(1)
+	}
+
+	startTime, err := time.Parse(timeFormat, os.Args[1])
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Invalid start time format:", err)
+		os.Exit(1)
+	}
+
+	endTime, err = time.Parse(timeFormat, os.Args[2])
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Invalid end time format:", err)
+		os.Exit(1)
+	}
+
+	if startTime.Minute() != 0 || startTime.Second() != 0 || endTime.Minute() != 0 || endTime.Second() != 0 {
+		fmt.Fprintln(os.Stderr, "Timestamps should represent the start of an hour (minute and second should be zero)")
+		os.Exit(1)
+	}
+	return startTime, endTime
+}
