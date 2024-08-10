@@ -18,13 +18,13 @@ type Parser interface {
 	Parse(scanner *bufio.Scanner) (chan DataPoint, error)
 }
 
-type DataParser struct{}
+type dataParser struct{}
 
 func NewDataParser() Parser {
-	return &DataParser{}
+	return &dataParser{}
 }
 
-func (p *DataParser) Parse(scanner *bufio.Scanner) (chan DataPoint, error) {
+func (p *dataParser) Parse(scanner *bufio.Scanner) (chan DataPoint, error) {
 	dataPoints := make(chan DataPoint)
 
 	go func() {

@@ -25,7 +25,7 @@ func (f *httpFetcher) Fetch() (*bufio.Scanner, error) {
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("received non-200 response code")
+		return nil, fmt.Errorf("received error response code")
 	}
 
 	return bufio.NewScanner(resp.Body), nil

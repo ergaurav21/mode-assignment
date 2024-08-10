@@ -27,7 +27,7 @@ func main() {
 
 func validation() (startTime, endTime time.Time) {
 	if len(os.Args) != 3 {
-		fmt.Fprintln(os.Stderr, "Usage: program <start-time> <end-time>")
+		fmt.Fprintln(os.Stderr, "Please use go run main.go <start-time> <end-time>")
 		os.Exit(1)
 	}
 
@@ -46,6 +46,7 @@ func validation() (startTime, endTime time.Time) {
 	if startTime.Minute() != 0 || startTime.Second() != 0 || endTime.Minute() != 0 || endTime.Second() != 0 {
 		fmt.Fprintln(os.Stderr, "Timestamps should represent the start of an hour (minute and second should be zero)")
 		os.Exit(1)
+
 	}
 	return startTime, endTime
 }
